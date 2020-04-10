@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Include common configuration
-include vendor/scorpion/config/common_full_phone.mk
+include vendor/scorpion/config/common.mk
 
 # Inherit from those products. Most specific first.
 $(call inherit-product, device/google/bonito/aosp_bonito.mk)
@@ -31,12 +31,12 @@ PRODUCT_MANUFACTURER := Google
 PRODUCT_BUILD_PROP_OVERRIDES += \
     PRODUCT_NAME="bonito" \
     TARGET_DEVICE="bonito" \
-    PRIVATE_BUILD_DESC="bonito-user 10 QQ1A.200205.002 6084386 release-keys"
+    PRIVATE_BUILD_DESC="bonito-user 10 QQ2A.200405.005 6254899 release-keys"
 
-BUILD_FINGERPRINT := "google/bonito/bonito:10/QQ1A.200205.002/6084386:user/release-keys"
+BUILD_FINGERPRINT := "google/bonito/bonito:QQ2A.200405.005/6254899:user/release-keys"
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.build.fingerprint=google/bonito/bonito:10/QQ1A.200205.002/6084386:user/release-keys
+    ro.build.fingerprint=google/bonito/bonito:10/QQ2A.200405.005/6254899:user/release-keys
 
 BOARD_PREBUILT_VENDORIMAGE := vendor/images/bonito/vendor.img
 

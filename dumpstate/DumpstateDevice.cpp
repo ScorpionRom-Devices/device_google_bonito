@@ -281,6 +281,15 @@ static void DumpF2FS(int fd) {
     DumpFileToFd(fd, "F2FS - fragmentation", "/proc/fs/f2fs/dm-6/segment_info");
 }
 
+static void DumpPower(int fd) {
+    RunCommandToFd(fd, "Power Stats Times", {"/vendor/bin/sh", "-c",
+                   "echo -n \"Boot: \" && /vendor/bin/uptime -s &&"
+                   "echo -n \"Now: \" && date"});
+    DumpFileToFd(fd, "Sleep Stats", "/sys/power/system_sleep/stats");
+    DumpFileToFd(fd, "Power Management Stats", "/sys/power/rpmh_stats/master_stats");
+    DumpFileToFd(fd, "WLAN Power Stats", "/d/wlan0/power_stats");
+}
+
 static void DumpeMMC(int fd) {
     DumpFileToFd(fd, "eMMC model", "/sys/block/mmcblk0/device/name");
     DumpFileToFd(fd, "eMMC prv", "/sys/block/mmcblk0/device/prv");
@@ -333,9 +342,9 @@ Return<void> DumpstateDevice::dumpstateBoard(const hidl_handle& handle) {
     DumpeMMC(fd);
 
     DumpFileToFd(fd, "INTERRUPTS", "/proc/interrupts");
-    DumpFileToFd(fd, "Sleep Stats", "/sys/power/system_sleep/stats");
-    DumpFileToFd(fd, "Power Management Stats", "/sys/power/rpmh_stats/master_stats");
-    DumpFileToFd(fd, "WLAN Power Stats", "/d/wlan0/power_stats");
+
+    DumpPower(fd);
+
     DumpFileToFd(fd, "LL-Stats", "/d/wlan0/ll_stats");
     DumpFileToFd(fd, "ICNSS Stats", "/d/icnss/stats");
     DumpFileToFd(fd, "SMD Log", "/d/ipc_logging/smd/log");
@@ -383,6 +392,11 @@ Return<void> DumpstateDevice::dumpstateBoard(const hidl_handle& handle) {
         int fdModem = handle->data[1];
         dumpModem(fd, fdModem);
     }
+
+    // Citadel info
+    RunCommandToFd(fd, "Citadel VERSION", {"/vendor/bin/hw/citadel_updater", "-lv"});
+    RunCommandToFd(fd, "Citadel STATS", {"/vendor/bin/hw/citadel_updater", "--stats"});
+    RunCommandToFd(fd, "Citadel BOARDID", {"/vendor/bin/hw/citadel_updater", "--board_id"});
 
     // Keep this at the end as very long on not for humans
     DumpFileToFd(fd, "WLAN FW Log Symbol Table", "/vendor/firmware/Data.msc");
